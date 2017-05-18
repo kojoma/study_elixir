@@ -15,8 +15,10 @@ defmodule StudyElixir.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :ecto, :mariaex],
-     mod: {StudyElixir.Application, []}]
+    [
+      extra_applications: [:logger, :ecto, :mariaex, :cowboy, :plug],
+      mod: {StudyElixir.Application, []}
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -31,7 +33,9 @@ defmodule StudyElixir.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.0"},
-      {:mariaex, "~> 0.7"}
+      {:mariaex, "~> 0.7"},
+      {:cowboy, "~> 1.0"},
+      {:plug, "~> 0.6"}
     ]
   end
 end
