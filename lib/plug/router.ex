@@ -19,7 +19,8 @@ defmodule StudyElixir.Plug.Router do
     person = %StudyElixir.Person{name: name}
     StudyElixir.Repo.insert(person)
 
-    send_resp(conn, 200, "create #{person.name}")
+    send_resp(conn, 200, "create\n
+              #{person.name}")
   end
 
   get "/read/:id" do
@@ -40,8 +41,8 @@ defmodule StudyElixir.Plug.Router do
 
     send_resp(conn, 200, "
               update\n
-              id: #{changeset.id}
-              name: #{changeset.name}")
+              id: #{id}
+              name: #{name}")
   end
 
   get "/delete/:id/" do
@@ -50,8 +51,8 @@ defmodule StudyElixir.Plug.Router do
     StudyElixir.Repo.delete(person)
 
     send_resp(conn, 200, "
-              delete
-              id: #{id}")
+              delete\n
+              id: #{person.id}")
   end
 
   match _ do
