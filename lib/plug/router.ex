@@ -17,25 +17,48 @@ defmodule StudyElixir.Plug.Router do
 
   post "/create/:name" do
     person = %StudyElixir.Person{name: name}
-    StudyElixir.Repo.insert(person)
+    {:ok, inserted_person} = StudyElixir.Repo.insert(person)
 
-    send_resp(conn, 200, "create\n
-              #{person.name}")
+    if inserted_person do
+      send_resp(conn, 200, "create\n
+                id: #{inserted_person.id}
+                name: #{inserted_person.name}")
+    else
+      send_resp(conn, 500, "
+                create\n
+                name: #{person.name}
+                failed")
+    end
   end
 
   get "/read/:id" do
     person = StudyElixir.Person
              |> StudyElixir.Repo.get(id)
 
-    send_resp(conn, 200, "
-              read\n
-              id: #{person.id}
-              name: #{person.name}")
+    if person do
+      send_resp(conn, 200, "
+                read\n
+                id: #{person.id}
+                name: #{person.name}")
+    else
+      send_resp(conn, 500, "
+                read\n
+                id: #{id}
+                not found")
+    end
   end
 
   post "/update/:id/:name" do
     person = StudyElixir.Person
              |> StudyElixir.Repo.get(id)
+
+    unless person do
+      send_resp(conn, 500, "
+                update\n
+                id: #{id}
+                not found")
+    end
+
     changeset = StudyElixir.Person.changeset(person, %{name: name})
     StudyElixir.Repo.update(changeset)
 
@@ -48,6 +71,14 @@ defmodule StudyElixir.Plug.Router do
   post "/delete/:id/" do
     person = StudyElixir.Person
              |> StudyElixir.Repo.get(id)
+
+    unless person do
+      send_resp(conn, 500, "
+                delete\n
+                id: #{id}
+                not found")
+    end
+
     StudyElixir.Repo.delete(person)
 
     send_resp(conn, 200, "
