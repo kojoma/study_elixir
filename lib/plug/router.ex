@@ -15,7 +15,7 @@ defmodule StudyElixir.Plug.Router do
               ")
   end
 
-  get "/create/:name" do
+  post "/create/:name" do
     person = %StudyElixir.Person{name: name}
     StudyElixir.Repo.insert(person)
 
@@ -33,7 +33,7 @@ defmodule StudyElixir.Plug.Router do
               name: #{person.name}")
   end
 
-  get "/update/:id/:name" do
+  post "/update/:id/:name" do
     person = StudyElixir.Person
              |> StudyElixir.Repo.get(id)
     changeset = StudyElixir.Person.changeset(person, %{name: name})
@@ -45,7 +45,7 @@ defmodule StudyElixir.Plug.Router do
               name: #{name}")
   end
 
-  get "/delete/:id/" do
+  post "/delete/:id/" do
     person = StudyElixir.Person
              |> StudyElixir.Repo.get(id)
     StudyElixir.Repo.delete(person)
