@@ -16,19 +16,42 @@ defmodule StudyElixir.Plug.Router do
   end
 
   get "/create/:name" do
-    send_resp(conn, 200, "create #{name}")
+    person = %StudyElixir.Person{name: name}
+    StudyElixir.Repo.insert(person)
+
+    send_resp(conn, 200, "create #{person.name}")
   end
 
   get "/read/:id" do
-    send_resp(conn, 200, "read #{id}")
+    person = StudyElixir.Person
+             |> StudyElixir.Repo.get(id)
+
+    send_resp(conn, 200, "
+              read\n
+              id: #{person.id}
+              name: #{person.name}")
   end
 
   get "/update/:id/:name" do
-    send_resp(conn, 200, "update #{id} #{name}")
+    person = StudyElixir.Person
+             |> StudyElixir.Repo.get(id)
+    changeset = StudyElixir.Person.changeset(person, %{name: name})
+    StudyElixir.Repo.update(changeset)
+
+    send_resp(conn, 200, "
+              update\n
+              id: #{changeset.id}
+              name: #{changeset.name}")
   end
 
   get "/delete/:id/" do
-    send_resp(conn, 200, "delete #{id}")
+    person = StudyElixir.Person
+             |> StudyElixir.Repo.get(id)
+    StudyElixir.Repo.delete(person)
+
+    send_resp(conn, 200, "
+              delete
+              id: #{id}")
   end
 
   match _ do
